@@ -82,6 +82,14 @@ We use top-level variables where possible instead of maps to allow easier handli
 </tr>
 <tr>
     <td>
+        <code>disk_boot_type</code>
+    </td>
+    <td>Disk type, should be pd-balanced, pd-ssd, pd-standard.</a></td>
+    <td>No</td>
+    <td><code>pd-balanced</code> <small>(default)</small></td>
+</tr>
+<tr>
+    <td>
         <code>disk_storage_enabled</code>
     </td>
     <td>True to attach storage disk. False to only have boot disk.</a></td>
@@ -95,6 +103,14 @@ We use top-level variables where possible instead of maps to allow easier handli
     <td>The size in GB of the storage volume.</a></td>
     <td>No</td>
     <td><code>100</code> <small>(default)</small></td>
+</tr>
+<tr>
+    <td>
+        <code>disk_storage_type</code>
+    </td>
+    <td>Disk type, should be pd-balanced, pd-ssd, pd-standard.</a></td>
+    <td>No</td>
+    <td><code>pd-balanced</code> <small>(default)</small></td>
 </tr>
 <tr>
     <td>

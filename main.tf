@@ -31,7 +31,7 @@ resource "google_compute_disk" "storage_disk" {
   labels = var.labels
   name   = "${var.instance_name}-storage-disk"
   size   = var.disk_storage_size
-  type   = "pd-ssd"
+  type   = var.disk_storage_type
   zone   = var.gcp_region_zone
 }
 
@@ -74,7 +74,7 @@ resource "google_compute_instance" "instance" {
   # Base disk for the OS
   boot_disk {
     initialize_params {
-      type  = "pd-ssd"
+      type  = var.disk_boot_type
       image = var.gcp_image
       size  = var.disk_boot_size
     }

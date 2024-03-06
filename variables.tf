@@ -52,6 +52,17 @@ variable "disk_boot_size" {
   default     = "10"
 }
 
+variable "disk_boot_type" {
+  type        = string
+  description = "Disk type, should be pd-balanced, pd-ssd, pd-standard"
+  default     = "pd-balanced"
+}
+variable "disk_storage_type" {
+  type        = string
+  description = "Disk type, should be pd-balanced, pd-ssd, pd-standard"
+  default     = "pd-balanced"
+}
+
 variable "disk_storage_enabled" {
   type        = bool
   description = "True to attach storage disk. False to only have boot disk. (Default: false)"
