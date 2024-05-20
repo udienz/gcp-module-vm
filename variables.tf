@@ -146,3 +146,12 @@ variable "desired_status" {
   type        = string
   default     = "RUNNING"
 }
+
+variable "service_account" {
+  default = null
+  type = object({
+    email  = string
+    scopes = set(string)
+  })
+  description = "Service account to attach to the instance. See https://www.terraform.io/docs/providers/google/r/compute_instance_template#service_account."
+}

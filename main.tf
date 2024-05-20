@@ -121,6 +121,8 @@ resource "google_compute_instance" "instance" {
   # defined as a label (see above).
   tags = var.gcp_network_tags
 
+  service_account = var.service_account
+
 }
 
 # Create a DNS record
@@ -133,3 +135,4 @@ resource "google_dns_record_set" "dns_record" {
   ttl          = var.dns_ttl
   type         = "A"
 }
+
