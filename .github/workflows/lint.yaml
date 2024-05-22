@@ -32,19 +32,24 @@ jobs:
     runs-on: 'ubuntu-latest'
     steps:
       - uses: 'actions/checkout@v4'
+      
       - name: Terraform Init
         id: init
         run: |
           terraform init -input=false
           terraform workspace show
+
       - name: Setup terraform
         uses: hashicorp/setup-terraform@v2
+
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
+
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
+
       - name: Create Comment with Terraform Plan
         uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
@@ -52,14 +57,32 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `#### Terraform Format and Style 🖌 \`${{ steps.fmt.outcome }}\`
-            #### Terraform Validation 🤖 \`${{ steps.validate.outcome }}\`
-
-            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-
+            // 1. Retrieve existing bot comments for the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform Plan Output')
+            });
+            const output = `#### Terraform Plan Output
+               \`\`\`
+               Plan: ${{ steps.validate.outputs.add }} to add, ${{ steps.validate.outputs.change }} to change, ${{ steps.validate.outputs.destroy }} to destroy.
+               \`\`\`
+               [Terraform Plan](${{ steps.validate.outputs.run_link }})
+               `;
+            // 3. Delete previous comment so PR timeline makes sense
+            if (botComment) {
+              github.rest.issues.deleteComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+              });
+            }
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: output
-            })
+            });
