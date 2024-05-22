@@ -121,7 +121,14 @@ resource "google_compute_instance" "instance" {
   # defined as a label (see above).
   tags = var.gcp_network_tags
 
-  service_account = var.service_account
+  dynamic "service_account" {
+    for_each = var.service_account == null ? [] : [var.service_account]
+    content {
+      email  = lookup(service_account.value, "email", null)
+      scopes = lookup(service_account.value, "scopes", null)
+    }
+  }
+
 
 }
 
